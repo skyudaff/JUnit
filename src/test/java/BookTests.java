@@ -1,3 +1,4 @@
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -5,6 +6,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 
 import java.util.stream.Stream;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 public class BookTests {
     Book sut;
@@ -40,8 +43,14 @@ public class BookTests {
     @ParameterizedTest
     @MethodSource
     public void estimatePriceTest(int pages, int rating, int expected) {
+        // act
+        int result = sut.estimatePrice(pages, rating);
+
         // assert
-        Assertions.assertEquals(expected, sut.estimatePrice(pages, rating));
+        Assertions.assertEquals(expected, result);
+
+        // assert JUnit + Hamcrest
+        assertThat(result, Matchers.equalTo(expected));
     }
 
     @Test
@@ -51,12 +60,34 @@ public class BookTests {
 
         // assert               // act
         Assertions.assertFalse(sut.isBig());
+
+        // assert JUnit + Hamcrest
+        assertThat(sut.isBig(), Matchers.equalTo(false));
     }
 
     @Test
     public void matchesTest() {
+        // given
         sut.title = "Java руководство";
 
-        Assertions.assertTrue(sut.matches("ava"));
+        // when
+        boolean result = sut.matches("ava");
+
+        // then
+        Assertions.assertTrue(result);
+
+        // then JUnit + Hamcrest
+        assertThat(result, Matchers.equalTo(true));
+    }
+
+    @Test
+    public void notNullTest() {
+        assertThat(sut, notNullValue());
+    }
+
+    @Test
+    public void stringTest() {
+    Book book = new Book("Название книги");
+    assertThat(book.title, containsString("книги"));
     }
 }

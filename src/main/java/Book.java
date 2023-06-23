@@ -11,6 +11,10 @@ public class Book {
         this.pages = pages;
     }
 
+    public Book(String title) {
+        this.title = title;
+    }
+
     public Book() {
     }
 
